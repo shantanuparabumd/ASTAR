@@ -219,7 +219,7 @@ if __name__ == "__main__":
     goal=(5,2)
     start=(0,0)
     # Create an instance of Dijkstra
-    d_algo = Dijkstra(600,250,1,start,goal)
+    d_algo = Dijkstra(600,250,2,start,goal)
     
     # Call the game method
     d_algo.game()
