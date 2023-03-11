@@ -22,7 +22,7 @@ class Dijkstra:
         # Define Colors
         self.background=(255,255,255)
         self.obst_color=(0,0,0)
-        self.clear_color=(243, 228, 20, 0.8)
+        self.clear_color=(255, 255, 245)
         self.grid_color=(233, 226, 230, 0.2)
         self.start_color=(132, 222, 15, 0.8)
         self.goal_color=(254, 0, 0, 0.8)
@@ -68,7 +68,6 @@ class Dijkstra:
                 # Draw the cell as a white box with a grey border
                 pygame.draw.rect(self.screen, self.grid_color, cell_rect, 1)
                 pygame.draw.rect(self.screen, self.background, cell_rect.inflate(-1, -1))
-        pygame.display.update()
 
     def draw_triangle(self,p1,p2,p3, color):
         # Define the vertices of the triangle
@@ -131,6 +130,7 @@ class Dijkstra:
             for j in range(x*self.grid_size,x*self.grid_size+self.grid_size):
                 color = self.screen.get_at((i, j)) 
                 if color==self.clear_color or color==self.obst_color :
+                    print("Obstacle")
                     return True
         self.change_color(self.explored_color,x,y)
         return False
@@ -142,6 +142,7 @@ class Dijkstra:
         pygame.display.update()
     
     def dijkstra(self):
+        start_time = time.time()
         idx=1
         start=(0,0,0,self.START)
         self.change_color(self.start_color,self.START[0],self.START[1])
@@ -180,7 +181,11 @@ class Dijkstra:
                                 cost=cost+1.4
                             idx=idx+1
                             open_list.put((cost,parent_idx,idx,neighbor))
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(f"Execution time of algorithm: {elapsed_time:.2f} seconds")
         self.change_color(self.goal_color,self.GOAL[0],self.GOAL[1])
+        self.change_color(self.start_color,self.START[0],self.START[1])
         return tracker,current
         
     def back_track(self,tracker,current):
@@ -200,8 +205,14 @@ class Dijkstra:
             pygame.display.update()
 
 if __name__ == "__main__":
+    # Define start and goal
+    # Inverted co ordinate system compensation
+    goal=(0,239)
+    start=(99,0)
+    # goal=(50,20)
+    # start=(0,0)
     # Create an instance of Dijkstra
-    d_algo = Dijkstra(600,250,2,(0,0),(20,20))
+    d_algo = Dijkstra(600,250,2,start,goal)
     
     # Call the game method
     d_algo.game()
