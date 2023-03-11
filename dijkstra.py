@@ -26,6 +26,9 @@ class Dijkstra:
         self.grid_color=(233, 226, 230, 0.2)
         self.start_color=(132, 222, 15, 0.8)
         self.goal_color=(254, 0, 0, 0.8)
+        self.explored_color= (252, 230, 108, 0.8)
+        self.track_color= (252, 184, 100, 1)
+        self.robot_color= (168, 230, 53, 1)
 
         # Define Grid Size
         self.grid_size=5
@@ -62,7 +65,7 @@ class Dijkstra:
                 y = row * self.grid_size
                 cell_rect = pygame.Rect(x, y, self.grid_size, self.grid_size)
 
-                # Draw the cell as a black rectangle with a white border
+                # Draw the cell as a white box with a grey border
                 pygame.draw.rect(self.screen, self.grid_color, cell_rect, 1)
                 pygame.draw.rect(self.screen, self.background, cell_rect.inflate(-1, -1))
         pygame.display.update()
@@ -129,7 +132,7 @@ class Dijkstra:
                 color = self.screen.get_at((i, j)) 
                 if color==self.clear_color or color==self.obst_color :
                     return True
-        self.change_color((245, 40, 145, 0.8),x,y)
+        self.change_color(self.explored_color,x,y)
         return False
             
     def change_color(self, color, x, y):
@@ -186,14 +189,14 @@ class Dijkstra:
         while not g_node[2]==0:
             for c in tracker:
                 if c[2] == g_node[1]:
-                    self.change_color((25, 252, 255, 1),c[3][0],c[3][1])
+                    self.change_color(self.track_color ,c[3][0],c[3][1])
                     path.append([c[3][0],c[3][1]])
                     g_node=c
         print("Complete")
         path.reverse()
         for x,y in path:
             time.sleep(0.05)
-            pygame.draw.circle(self.screen, (34, 203, 203, 1), (y*self.grid_size,x*self.grid_size), 5)
+            pygame.draw.circle(self.screen, self.robot_color, (y*self.grid_size,x*self.grid_size), 5)
             pygame.display.update()
 
 if __name__ == "__main__":
