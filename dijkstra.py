@@ -43,8 +43,16 @@ class Dijkstra:
         self.running=True
         self.drawgrid()
         self.draw_obstacles()
-        tracker,current=self.dijkstra()
-        self.back_track(tracker,current)
+        if self.check_grid(self.GOAL[0],self.GOAL[1]):
+            self.change_color(self.goal_color,self.GOAL[0],self.GOAL[1])
+            print("Invalid")
+            pygame.display.update()
+            time.sleep(6)
+            self.running=False
+        else:
+            print("Valid")
+            tracker,current=self.dijkstra()
+            self.back_track(tracker,current)
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -130,7 +138,6 @@ class Dijkstra:
             for j in range(x*self.grid_size,x*self.grid_size+self.grid_size):
                 color = self.screen.get_at((i, j)) 
                 if color==self.clear_color or color==self.obst_color :
-                    print("Obstacle")
                     return True
         self.change_color(self.explored_color,x,y)
         return False
@@ -209,10 +216,10 @@ if __name__ == "__main__":
     # Inverted co ordinate system compensation
     goal=(0,239)
     start=(99,0)
-    # goal=(50,20)
-    # start=(0,0)
+    goal=(5,2)
+    start=(0,0)
     # Create an instance of Dijkstra
-    d_algo = Dijkstra(600,250,2,start,goal)
+    d_algo = Dijkstra(600,250,1,start,goal)
     
     # Call the game method
     d_algo.game()
