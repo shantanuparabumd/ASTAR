@@ -24,6 +24,8 @@ class Dijkstra:
         self.obst_color=(0,0,0)
         self.clear_color=(243, 228, 20, 0.8)
         self.grid_color=(233, 226, 230, 0.2)
+        self.start_color=(132, 222, 15, 0.8)
+        self.goal_color=(254, 0, 0, 0.8)
 
         # Define Grid Size
         self.grid_size=5
@@ -38,6 +40,7 @@ class Dijkstra:
         self.running=True
         self.drawgrid()
         self.draw_obstacles()
+        self.dijkstra()
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -125,7 +128,7 @@ class Dijkstra:
                 color = self.screen.get_at((i, j)) 
                 if color==self.clear_color or color==self.obst_color :
                     return True
-        self.change_color((245, 40, 145, 0.8),x,y,self.grid_size)
+        self.change_color((245, 40, 145, 0.8),x,y)
         return False
             
     def change_color(self, color, x, y):
@@ -181,14 +184,14 @@ class Dijkstra:
             for c in tracker:
                 if c[2] == g_node[1]:
     #                 print(c)
-                    change_color((25, 252, 255, 1),c[3][0],c[3][1],grid_size)
+                    self.change_color((25, 252, 255, 1),c[3][0],c[3][1])
                     path.append([c[3][0],c[3][1]])
                     g_node=c
         print("Complete")
         path.reverse()
         for x,y in path:
             time.sleep(0.05)
-            pygame.draw.circle(screen, (34, 203, 203, 1), (y*grid_size,x*grid_size), 5)
+            pygame.draw.circle(self.screen, (34, 203, 203, 1), (y*self.grid_size,x*self.grid_size), 5)
             pygame.display.update()
 
 if __name__ == "__main__":
