@@ -114,7 +114,22 @@ class Dijkstra:
         self.draw_triangle(p1,p2,p3,self.obst_color)
         self.draw_rectangle(100,0,50,100, self.obst_color)
         self.draw_rectangle(100,250-100,50,100, self.obst_color)
-        
+
+        pygame.display.update()
+
+    def check_grid(self,x,y):
+        for i in range(y*self.grid_size+1,y*self.grid_size+self.grid_size):
+            for j in range(x*self.grid_size,x*self.grid_size+self.grid_size):
+                color = self.screen.get_at((i, j)) 
+                if color==self.clear_color or color==self.obst_color :
+                    return True
+        self.change_color((245, 40, 145, 0.8),x,y,self.grid_size)
+        return False
+            
+    def change_color(self, color, x, y):
+        cell_rect = pygame.Rect(y*self.grid_size, x*self.grid_size, self.grid_size, self.grid_size)
+        pygame.draw.rect(self.screen, self.grid_color, cell_rect, 1)
+        pygame.draw.rect(self.screen, color, cell_rect.inflate(-1, -1))
         pygame.display.update()
 
 if __name__ == "__main__":
