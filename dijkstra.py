@@ -40,7 +40,8 @@ class Dijkstra:
         self.running=True
         self.drawgrid()
         self.draw_obstacles()
-        self.dijkstra()
+        tracker,current=self.dijkstra()
+        self.back_track(tracker,current)
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -177,13 +178,14 @@ class Dijkstra:
                             idx=idx+1
                             open_list.put((cost,parent_idx,idx,neighbor))
         self.change_color(self.goal_color,self.GOAL[0],self.GOAL[1])
-    #     print(current)
+        return tracker,current
+        
+    def back_track(self,tracker,current):
         g_node=current
         path=[]
         while not g_node[2]==0:
             for c in tracker:
                 if c[2] == g_node[1]:
-    #                 print(c)
                     self.change_color((25, 252, 255, 1),c[3][0],c[3][1])
                     path.append([c[3][0],c[3][1]])
                     g_node=c
