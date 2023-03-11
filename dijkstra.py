@@ -3,6 +3,8 @@ import pygame
 import math
 import numpy as np
 import time
+from queue import PriorityQueue
+
 
 class Dijkstra:
     def __init__(self,width,height,scale,start,goal):
@@ -131,6 +133,63 @@ class Dijkstra:
         pygame.draw.rect(self.screen, self.grid_color, cell_rect, 1)
         pygame.draw.rect(self.screen, color, cell_rect.inflate(-1, -1))
         pygame.display.update()
+    
+    def dijkstra(self):
+        idx=1
+        start=(0,0,0,self.START)
+        self.change_color(self.start_color,self.START[0],self.START[1])
+        goal=(self.H_PX+self.V_PX,0,0,self.GOAL)
+        
+        # Define action sets
+        actions=[[0,1],[1,0],[0,-1],[-1,0],[1,1],[-1,-1],[-1,1],[1,-1]]
+        # Create a open list
+        open_list = PriorityQueue()
+        # Create a close list
+        close_list=set()
+        # Create a tracker for path node with compatible data type
+        tracker=[]
+        current=start
+        open_list.put(start)
+        
+        while open_list and not current[3]==goal[3]:
+            current=open_list.get()
+            tracker.append(current)
+            if current[3] in close_list:
+                    continue
+            if current[3]==goal[3]:
+                    break
+            close_list.add(current[3])
+            for a in actions:
+                    cost=current[0]
+                    parent_idx=current[2]
+                    neighbor=(current[3][0]+a[0],current[3][1]+a[1])
+                    x,y=neighbor
+                    if x>=0 and y>=0 and x<self.V_PX and y<self.H_PX and not self.check_grid(x,y):
+                            if neighbor in close_list:
+                                continue
+                            if a[0]==0 or a[1]==0:
+                                cost=cost+1
+                            else:
+                                cost=cost+1.4
+                            idx=idx+1
+                            open_list.put((cost,parent_idx,idx,neighbor))
+        self.change_color(self.goal_color,self.GOAL[0],self.GOAL[1])
+    #     print(current)
+        g_node=current
+        path=[]
+        while not g_node[2]==0:
+            for c in tracker:
+                if c[2] == g_node[1]:
+    #                 print(c)
+                    change_color((25, 252, 255, 1),c[3][0],c[3][1],grid_size)
+                    path.append([c[3][0],c[3][1]])
+                    g_node=c
+        print("Complete")
+        path.reverse()
+        for x,y in path:
+            time.sleep(0.05)
+            pygame.draw.circle(screen, (34, 203, 203, 1), (y*grid_size,x*grid_size), 5)
+            pygame.display.update()
 
 if __name__ == "__main__":
     # Create an instance of Dijkstra
