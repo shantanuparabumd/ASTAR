@@ -26,7 +26,7 @@ class Dijkstra:
         self.grid_color=(233, 226, 230, 0.2)
         self.start_color=(132, 222, 15, 0.8)
         self.goal_color=(254, 0, 0, 0.8)
-        self.explored_color= (252, 230, 108, 0.8)
+        self.explored_color= (237, 188, 64)
         self.track_color= (252, 184, 100, 1)
         self.robot_color= (168, 230, 53, 1)
 
