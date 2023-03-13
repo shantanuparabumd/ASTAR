@@ -24,6 +24,8 @@
 ## How to Run the Program:
 To run the program, open the command prompt/terminal and navigate to the directory where the source code files are located. Then, type the following command: python [filename].py.
 
+## Github Link
+[Repository](https://github.com/shantanuparabumd/Dijkstra.git)
 
-
-
+## Video Output
+[Output Video](dijkstra.mp4)
