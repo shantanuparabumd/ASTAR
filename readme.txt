@@ -19,6 +19,7 @@
   + Press enter once the image is shown this will complete the video recording
   + The program will ask the user to give the inputs for start and goal and check wheter it is valid
 
+Note: The output video is created as Dijkstra01.avi which is converted to mp4 using another software.
 
 
 ## How to Run the Program:
