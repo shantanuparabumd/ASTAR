@@ -164,10 +164,8 @@ class Dijkstra:
             print(" Goal Out of Bounds")
         if self.running:
             self.img,self.node_grid = self.make_obstacle_space()
-            print(len(self.node_grid),len(self.node_grid[0]))
             self.t,self.c= self.dijkstra()
-            print(self.c)
-            print(self.t[0])
+            
             self.img=self.back_track(self.t,self.c,self.img)
             self.img = cv2.flip(self.img, 0)
             for i in range(3000):
@@ -223,7 +221,7 @@ class Dijkstra:
         current=start
         open_list.put(start)
         while open_list and not current[3]==goal[3]:
-            print('.',end=)
+            print('.',end='')
             current=open_list.get()
             close_list.add(current[3])
             tracker.append(current)
@@ -258,7 +256,7 @@ class Dijkstra:
                         
         end_time = time.time()
         elapsed_time = end_time - start_time
-        print(f"Execution time of algorithm: {elapsed_time:.2f} seconds")
+        print(f"\nExecution time of algorithm: {elapsed_time:.2f} seconds")
         return tracker,current
 
 if __name__ == "__main__":
