@@ -31,13 +31,7 @@ To run the program, open the command prompt/terminal and navigate to the directo
 ## Video Output
 [Output Video](dijkstra.mp4)
 
-<video width="600" height="250" controls>
-  <source src="[dijkstra.mp4](https://youtu.be/tTpAmOxm8DI)" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+https://user-images.githubusercontent.com/112659509/225170423-4d0a3ba9-d8ed-4c8e-a65b-98b950e8bd38.mp4
 
 
-![Alt text for your video](dijkstra.mp4)
-
-
-<iframe width="600" height="250" src="https://www.youtube.com/embed/tTpAmOxm8DI" frameborder="0" allowfullscreen></iframe>
