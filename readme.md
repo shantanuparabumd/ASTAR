@@ -35,3 +35,9 @@ To run the program, open the command prompt/terminal and navigate to the directo
   <source src="[dijkstra.mp4](https://youtu.be/tTpAmOxm8DI)" type="video/mp4">
   Your browser does not support the video tag.
 </video>
+
+
+![Alt text for your video](dijkstra.mp4)
+
+
+<iframe width="600" height="250" src="https://www.youtube.com/embed/tTpAmOxm8DI" frameborder="0" allowfullscreen></iframe>
