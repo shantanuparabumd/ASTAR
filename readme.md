@@ -30,4 +30,8 @@ To run the program, open the command prompt/terminal and navigate to the directo
 
 ## Video Output
 [Output Video](dijkstra.mp4)
-<iframe width="560" height="315" src="https://www.youtube.com/embed/tTpAmOxm8DI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+<video width="600" height="250" controls>
+  <source src="[dijkstra.mp4](https://youtu.be/tTpAmOxm8DI)" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
