@@ -9,7 +9,7 @@ class Astar:
     def __init__(self,width,height,scale,start,goal,robot_clear,step_size):
         # Get the video dimensions and FPS
         
-        self.result = cv2.VideoWriter("Dijkstra01.avi", cv2.VideoWriter_fourcc(*'MJPG'), 600, (width, height))
+        self.result = cv2.VideoWriter("Astar01.avi", cv2.VideoWriter_fourcc(*'MJPG'), 600, (width, height))
         
         # Define constants
         self.START=start
@@ -19,6 +19,7 @@ class Astar:
         self.HEIGHT=height
         self.L=step_size
         self.frame_info=[]
+        self.ROBOT=robot_clear
         # self.screen_size=self.get_screen_size(width,height,scale)
         # self.screen = pygame.display.set_mode(self.screen_size)
 
@@ -41,6 +42,7 @@ class Astar:
 
         self.HEX=self.hexagon(125,300,50)
         self.HEX_CLR=self.hexagon(125,300,60)
+        self.HEX_ROBO_CLR=self.hexagon(125,300,70)
         # Triangle
         p1=((250-20),455)
         p2=(20, 455)
@@ -48,6 +50,14 @@ class Astar:
         p4=(20, 465)
         p5=(125,515)
         self.TRI_CLR = [p1, p2, p4, p5,p3]
+        
+        p1=((250-15),450)
+        p2=(15, 450)
+        p3=((250-15),470)
+        p4=(15, 470)
+        p5=(125,520)
+        self.TRI_ROBO_CLR = [p1, p2, p4, p5,p3]
+        
         p1=(25,460)
         p2=(225, 460)
         p3=(125,510)
@@ -124,6 +134,15 @@ class Astar:
         h5= self.obstacle_detect_boundary(p,5,5,240,590)
         
         return (h1 or h2 or h3 or h4 or h5)
+    
+    def check_robot(self,p):
+        h1=self.obstacle_detect_rectangle(p,0,90,110,70)
+        h2=self.obstacle_detect_rectangle(p,140,90,110,70)
+        h3=self.obstacle_detect_polygon(p,self.HEX_ROBO_CLR)
+        h4=self.obstacle_detect_polygon(p,self.TRI_ROBO_CLR)
+        h5= self.obstacle_detect_boundary(p,10,10,230,580)
+        
+        return (h1 or h2 or h3 or h4 or h5)
 
     def make_obstacle_space(self):
         grid=np.ones((self.HEIGHT,self.WIDTH,3),np.uint8)
@@ -133,11 +152,13 @@ class Astar:
             for j in  range(self.WIDTH*2):
                 theta=[]
                 for t in range(12):
-                    if self.check_clearance((i/2,j/2)):
+                    if self.check_robot((i/2,j/2)):
                         theta.append([-1,None,None,None,(i/2,j/2,t),None])
-                        grid[int(np.floor(i/2))][int(np.floor(j/2))]=np.array(self.clear_color)
-                        if self.check_obstacle((i/2,j/2)):
-                            grid[int(np.floor(i/2))][int(np.floor(j/2))]=np.array(self.obst_color)
+                        grid[int(np.floor(i/2))][int(np.floor(j/2))]=np.array(self.robot_color)
+                        if self.check_clearance((i/2,j/2)):
+                            grid[int(np.floor(i/2))][int(np.floor(j/2))]=np.array(self.clear_color)
+                            if self.check_obstacle((i/2,j/2)):
+                                grid[int(np.floor(i/2))][int(np.floor(j/2))]=np.array(self.obst_color)
                     else:
                         theta.append([float('inf'),float('inf'),None,None,(i/2,j/2,t),float('inf')])
                         grid[int(np.floor(i/2))][int(np.floor(j/2))]=np.array(self.background)
@@ -176,10 +197,8 @@ class Astar:
             self.video()
             self.img=self.back_track(self.t,self.c,self.img)
 #             self.img = cv2.flip(self.img, 0)
-            for i in range(100):
+            for i in range(3000):
                 flip_img = cv2.flip(self.img, 0)
-                cv2.imshow("Out",flip_img)
-                cv2.waitKey(1)
                 self.result.write(flip_img)
             flip_img = cv2.flip(self.img, 0)
             cv2.imshow("Out", flip_img)
@@ -258,8 +277,8 @@ class Astar:
         for current,neighbor in self.frame_info:
             self.draw_vector(current,neighbor)
             flip_img = cv2.flip(self.img, 0)
-            cv2.imshow("Out",flip_img)
-            cv2.waitKey(1)
+#             cv2.imshow("Out",flip_img)
+#             cv2.waitKey(1)
             if cv2.waitKey(20) & 0xFF == ord('q'):
                 break
             self.result.write(flip_img)
@@ -358,8 +377,8 @@ if __name__ == "__main__":
 #     gt=int(input("Enter theta of goal point: "))
 #     goal=(gy,gx,gt)
     start=(125,50,0)
-#     goal=(125,430,0)
-    goal=(30,30,0)
+    goal=(230,430,0)
+#     goal=(30,30,0)
     # start=(0,0)
     # Create an instance of Dijkstra
     robot_clear=5
