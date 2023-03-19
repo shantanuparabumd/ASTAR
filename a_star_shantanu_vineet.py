@@ -1,3 +1,8 @@
+# Project 3 
+# Submission By: Shantanu Parab (sparab), Vineet Singh (vsingh03)
+
+# GITHUB Link: https://github.com/shantanuparabumd/ASTAR.git
+
 # Imports
 import math
 import numpy as np
@@ -195,13 +200,12 @@ class Astar:
             self.t,self.c= self.astar()
             self.video()
             self.img=self.back_track(self.t,self.c,self.img)
-#             self.img = cv2.flip(self.img, 0)
             for i in range(3000):
                 flip_img = cv2.flip(self.img, 0)
                 self.result.write(flip_img)
             flip_img = cv2.flip(self.img, 0)
             cv2.imshow("Out", flip_img)
-            cv2.waitKey(0)
+            cv2.waitKey(10)
             cv2.destroyAllWindows()
 
     def back_track(self,tracker,current,img):
@@ -258,7 +262,6 @@ class Astar:
         # Calculate the distance between the point and the center of the circle using the Pythagorean theorem
         distance = ((current[0] - self.GOAL[0]) ** 2 + (current[1] - self.GOAL[1]) ** 2) ** 0.5
         # If the distance is less than or equal to the radius of the circle, the point lies within the circle
-#         print(current,distance)
         if distance <= 1.5:
             return True
         else:
@@ -274,10 +277,6 @@ class Astar:
         for current,neighbor in self.frame_info:
             self.draw_vector(current,neighbor)
             flip_img = cv2.flip(self.img, 0)
-#             cv2.imshow("Out",flip_img)
-#             cv2.waitKey(1)
-            if cv2.waitKey(20) & 0xFF == ord('q'):
-                break
             self.result.write(flip_img)
                  
     def astar(self):
@@ -285,7 +284,6 @@ class Astar:
         idx=1
         start_cost_to_goal=math.sqrt((self.GOAL[0]-self.START[0])**2 + (self.GOAL[1]-self.START[1])**2)
         start=(start_cost_to_goal,start_cost_to_goal,0,0,self.START,0)
-#         self.change_color(self.start_color,self.START[0],self.START[1])
         goal=(float('inf'),0,None,None,self.GOAL,None)
         
          # Define action sets
@@ -314,12 +312,12 @@ class Astar:
                         if neighbor[4] not in close_list and not neighbor[0]==-1:
                             if  neighbor[0]==float('inf'):
                                 self.frame_info.append([current,neighbor])
-                                self.draw_vector(current,neighbor)
+                                # self.draw_vector(current,neighbor)
                                 # flip_img = cv2.flip(self.img, 0)
-                                # cv2.imshow("Out",flip_img)
-                                # cv2.waitKey(1)
-                                # if cv2.waitKey(20) & 0xFF == ord('q'):
-                                #     break
+                                # # cv2.imshow("Out",flip_img)
+                                # # cv2.waitKey(1)
+                                # # if cv2.waitKey(20) & 0xFF == ord('q'):
+                                # #     break
                                 # self.result.write(flip_img)
 #                                 Parent
                                 neighbor[2]=current[3]
@@ -351,16 +349,22 @@ if __name__ == "__main__":
     parser.add_argument("--GoalState",nargs='+', type=int, help = 'Goal state for the matrix')
     parser.add_argument("--StepSize",nargs='+', type=int, help = 'Step size for the robot')
     parser.add_argument("--RobotClearance",nargs='+', type=int, help = 'Clearance for the robot')
+    parser.add_argument("--ObjectClearance",nargs='+', type=int, help = 'Clearance for the object')
     Args = parser.parse_args()
     initial_point = Args.InitState
     goal_point = Args.GoalState
     step_size = Args.StepSize
     robot_clear = Args.RobotClearance
+    object_clear = Args.RobotClearance
 
+    # Converting initial and final goals to multiple of 30 
+    init_deg = int(initial_point[2]/30)
+    goal_deg = int(goal_point[2]/30)
     # Converting inputs from list to tuple and integer 
-    start=(initial_point[1], initial_point[0],0)
-    goal=(goal_point[1], goal_point[0],0)
+    start=(initial_point[1], initial_point[0],init_deg)
+    goal=(goal_point[1], goal_point[0],goal_deg)
     robot_clear = robot_clear[0]
+    object_clear = object_clear[0]
     step_size = step_size[0]
 
     #Creating an instance of A*
