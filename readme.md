@@ -43,6 +43,4 @@ To run the program, open the command prompt/terminal and navigate to the directo
 
 
 
-https://user-images.githubusercontent.com/112659509/226208131-b0ecbe65-8fd9-41cd-b907-1377dbbbac51.mp4
-
 
