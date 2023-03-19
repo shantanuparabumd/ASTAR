@@ -26,13 +26,14 @@ class Astar:
         # Define Colors
         self.background=(255,255,255)
         self.obst_color=(0,0,0)
-        self.clear_color= (145, 194, 245)
+        self.clear_color= (12, 253, 240)
         self.grid_color=(233, 226, 230, 0.2)
         self.start_color=(132, 222, 15, 0.8)
         self.goal_color=(254, 0, 0, 0.8)
         self.explored_color= (64, 188, 237)
-        self.track_color= (64, 64, 237)
-        self.robot_color= (168, 230, 53)
+        self.track_color= (16, 141, 16)
+        self.robot_color= (62, 169, 119)
+        self.robot_clear_color= (255, 255, 255)
 
         # Define Grid Size
         self.grid_size=2
@@ -152,7 +153,7 @@ class Astar:
                 for t in range(12):
                     if self.check_robot((i/2,j/2)):
                         theta.append([-1,None,None,None,(i/2,j/2,t),None])
-                        grid[int(np.floor(i/2))][int(np.floor(j/2))]=np.array(self.robot_color)
+                        grid[int(np.floor(i/2))][int(np.floor(j/2))]=np.array(self.robot_clear_color)
                         if self.check_clearance((i/2,j/2)):
                             grid[int(np.floor(i/2))][int(np.floor(j/2))]=np.array(self.clear_color)
                             if self.check_obstacle((i/2,j/2)):
@@ -218,7 +219,7 @@ class Astar:
             x2,y2=path[i+1]
             print(path[i],path[i+1])
             # draw the line on the image
-            img=cv2.line(img, (int(x2),int(y2)), (int(x1),int(y1)), (0, 0, 255), 1)
+            img=cv2.line(img, (int(x2),int(y2)), (int(x1),int(y1)), self.track_color, 4)
         return img
     
     def roundn(self,num):
@@ -248,7 +249,7 @@ class Astar:
         end_point = (int(np.floor(neighbor[4][1])),int(np.floor(neighbor[4][0])))
 
         # draw the line on the image
-        self.img=cv2.line(self.img, start_point, end_point, (0, 255, 0), 1)
+        self.img=cv2.line(self.img, start_point, end_point, self.robot_color, 1)
         
     def cost_to_goal(self,x,y):
         return math.sqrt((self.GOAL[0]-x)**2 + (self.GOAL[1]-y)**2)
@@ -314,12 +315,12 @@ class Astar:
                             if  neighbor[0]==float('inf'):
                                 self.frame_info.append([current,neighbor])
                                 self.draw_vector(current,neighbor)
-                                flip_img = cv2.flip(self.img, 0)
-                                cv2.imshow("Out",flip_img)
-                                cv2.waitKey(1)
-                                if cv2.waitKey(20) & 0xFF == ord('q'):
-                                    break
-                                self.result.write(flip_img)
+                                # flip_img = cv2.flip(self.img, 0)
+                                # cv2.imshow("Out",flip_img)
+                                # cv2.waitKey(1)
+                                # if cv2.waitKey(20) & 0xFF == ord('q'):
+                                #     break
+                                # self.result.write(flip_img)
 #                                 Parent
                                 neighbor[2]=current[3]
 #                                 Cost to Come
