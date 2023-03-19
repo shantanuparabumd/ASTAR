@@ -356,7 +356,7 @@ if __name__ == "__main__":
     goal_point = Args.GoalState
     step_size = Args.StepSize
     robot_clear = Args.RobotClearance
-    object_clear = Args.RobotClearance
+    object_clear = Args.ObjectClearance
 
     # Converting initial and final goals to multiple of 30 
     init_deg = int(initial_point[2]/30)
