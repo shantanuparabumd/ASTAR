@@ -13,7 +13,7 @@ import argparse
 
 # Creating Node Class
 class Astar:
-    def __init__(self,width,height,scale,start,goal,robot_clear,step_size):
+    def __init__(self,width,height,scale,start,goal,robot_clear,obj_clear,step_size):
         
         # Get the video dimensions and FPS
         self.result = cv2.VideoWriter("Astar01.avi", cv2.VideoWriter_fourcc(*'MJPG'), 600, (width, height))
@@ -27,6 +27,7 @@ class Astar:
         self.L=step_size
         self.frame_info=[]
         self.ROBOT=robot_clear
+        self.OBJ=obj_clear
 
         # Define Colors
         self.background=(255,255,255)
@@ -47,22 +48,22 @@ class Astar:
         self.V_PX=self.HEIGHT*self.SCALE/self.grid_size
 
         self.HEX=self.hexagon(125,300,50)
-        self.HEX_CLR=self.hexagon(125,300,60)
-        self.HEX_ROBO_CLR=self.hexagon(125,300,70)
+        self.HEX_CLR=self.hexagon(125,300,50+(self.OBJ))
+        self.HEX_ROBO_CLR=self.hexagon(125,300,50+(self.OBJ+self.ROBOT))
         # Triangle
-        p1=((250-20),455)
-        p2=(20, 455)
-        p3=((250-20),465)
-        p4=(20, 465)
-        p5=(125,515)
-        self.TRI_CLR = [p1, p2, p4, p5,p3]
+        p1=(25-self.OBJ, 460-self.OBJ)
+        p2=(25-self.OBJ, 460+self.OBJ)
+        p3=(125,510+self.OBJ)
+        p4=(225+self.OBJ, 460+self.OBJ)
+        p5=(225+self.OBJ,460-self.OBJ)
+        self.TRI_CLR = [p1, p2, p3, p4, p5]
         
-        p1=((250-15),450)
-        p2=(15, 450)
-        p3=((250-15),470)
-        p4=(15, 470)
-        p5=(125,520)
-        self.TRI_ROBO_CLR = [p1, p2, p4, p5,p3]
+        p1=(25-(self.OBJ+self.ROBOT), 460-(self.OBJ+self.ROBOT))
+        p2=(25-(self.OBJ+self.ROBOT), 460+(self.OBJ+self.ROBOT))
+        p3=(125,510+(self.OBJ+self.ROBOT))
+        p4=(225+(self.OBJ+self.ROBOT), 460+(self.OBJ+self.ROBOT))
+        p5=(225+(self.OBJ+self.ROBOT),460-(self.OBJ+self.ROBOT))
+        self.TRI_ROBO_CLR = [p1, p2, p3, p4, p5]
         
         p1=(25,460)
         p2=(225, 460)
@@ -131,20 +132,20 @@ class Astar:
         return (h1 or h2 or h3 or h4 )
     
     def check_clearance(self,p):
-        h1=self.obstacle_detect_rectangle(p,0,95,105,60)
-        h2=self.obstacle_detect_rectangle(p,145,95,105,60)
+        h1=self.obstacle_detect_rectangle(p,0,100-self.OBJ,100+self.OBJ,50+2*self.OBJ)
+        h2=self.obstacle_detect_rectangle(p,150-self.OBJ,100-self.OBJ,100+self.OBJ,50+2*self.OBJ)
         h3=self.obstacle_detect_polygon(p,self.HEX_CLR)
         h4=self.obstacle_detect_polygon(p,self.TRI_CLR)
-        h5= self.obstacle_detect_boundary(p,5,5,240,590)
+        h5= self.obstacle_detect_boundary(p,self.OBJ,self.OBJ,250-2*self.OBJ,600-2*self.OBJ)
         
         return (h1 or h2 or h3 or h4 or h5)
     
     def check_robot(self,p):
-        h1=self.obstacle_detect_rectangle(p,0,90,110,70)
-        h2=self.obstacle_detect_rectangle(p,140,90,110,70)
+        h1=self.obstacle_detect_rectangle(p,0,100-(self.OBJ+self.ROBOT),100+(self.OBJ+self.ROBOT),50+2*(self.OBJ+self.ROBOT))
+        h2=self.obstacle_detect_rectangle(p,150-(self.OBJ+self.ROBOT),100-(self.OBJ+self.ROBOT),100+(self.OBJ+self.ROBOT),50+2*(self.OBJ+self.ROBOT))
         h3=self.obstacle_detect_polygon(p,self.HEX_ROBO_CLR)
         h4=self.obstacle_detect_polygon(p,self.TRI_ROBO_CLR)
-        h5= self.obstacle_detect_boundary(p,10,10,230,580)
+        h5= self.obstacle_detect_boundary(p,(self.OBJ+self.ROBOT),(self.OBJ+self.ROBOT),250-2*(self.OBJ+self.ROBOT),600-2*(self.OBJ+self.ROBOT))
         
         return (h1 or h2 or h3 or h4 or h5)
 
@@ -368,7 +369,7 @@ if __name__ == "__main__":
     step_size = step_size[0]
 
     #Creating an instance of A*
-    d_algo = Astar(600,250,1,start,goal,robot_clear,step_size)
+    d_algo = Astar(600,250,1,start,goal,robot_clear,object_clear,step_size)
 
     # Call the game method
     d_algo.game()
