@@ -4,11 +4,13 @@ import numpy as np
 import time
 from queue import PriorityQueue
 import cv2
+import argparse
 
+# Creating Node Class
 class Astar:
     def __init__(self,width,height,scale,start,goal,robot_clear,step_size):
-        # Get the video dimensions and FPS
         
+        # Get the video dimensions and FPS
         self.result = cv2.VideoWriter("Astar01.avi", cv2.VideoWriter_fourcc(*'MJPG'), 600, (width, height))
         
         # Define constants
@@ -20,8 +22,6 @@ class Astar:
         self.L=step_size
         self.frame_info=[]
         self.ROBOT=robot_clear
-        # self.screen_size=self.get_screen_size(width,height,scale)
-        # self.screen = pygame.display.set_mode(self.screen_size)
 
         # Define Colors
         self.background=(255,255,255)
@@ -115,8 +115,7 @@ class Astar:
             if not h:
                 return False
         return True
-
-            
+        
     def check_obstacle(self,p):
         h1=self.obstacle_detect_rectangle(p,0,100,100,50)
         h2=self.obstacle_detect_rectangle(p,150,100,100,50)
@@ -124,7 +123,6 @@ class Astar:
         h4=self.obstacle_detect_polygon(p,self.TRI)
 
         return (h1 or h2 or h3 or h4 )
-
     
     def check_clearance(self,p):
         h1=self.obstacle_detect_rectangle(p,0,95,105,60)
@@ -180,10 +178,10 @@ class Astar:
 
         if self.GOAL[0]>=0 and self.GOAL[0]<self.HEIGHT and self.GOAL[1]>=0 and self.GOAL[1]<self.WIDTH:
             if self.check_clearance(self.GOAL):
-                print("Invalid")
+                print("Invalid Goal")
                 self.running=False
             else:
-                print("Valid")
+                print("Valid Goal")
         else:
             self.running=False
             print(" Goal Out of Bounds")
@@ -231,18 +229,15 @@ class Astar:
         return  rounded_num
     
     def action_set(self,current,action):
-#         print(current)
         xg=action[1]*np.cos((action[0]+current[2])*np.pi/6)
         yg=action[1]*np.sin((action[0]+current[2])*np.pi/6)
         xg=current[1]+xg
         yg=current[0]+yg
         xg=self.roundn(xg)
         yg=self.roundn(yg)
-#         print(xg,yg,)
         if xg>=0 and yg>=0 and xg<self.WIDTH and yg<self.HEIGHT:
                 cost=action[1]
                 k=(action[0]+current[2])%12
-#                 print(xg,yg,k)
                 return self.node_grid[int(yg*2)][int(xg*2)][int(k)],cost
         else:
             return None,None
@@ -267,6 +262,7 @@ class Astar:
             return True
         else:
             return False
+
     def check_dup(self,current, open_list):
         for _,_,_,_,node,_ in open_list:
             if ((current[0] - node[0]) ** 2 + (current[1] - node[1]) ** 2)<=0.5:
@@ -282,10 +278,8 @@ class Astar:
             if cv2.waitKey(20) & 0xFF == ord('q'):
                 break
             self.result.write(flip_img)
-            
-        
+                 
     def astar(self):
-#         print(len(self.node_grid),len(self.node_grid[0]),len(self.node_grid[0][0]))
         start_time = time.time()
         idx=1
         start_cost_to_goal=math.sqrt((self.GOAL[0]-self.START[0])**2 + (self.GOAL[1]-self.START[1])**2)
@@ -294,11 +288,10 @@ class Astar:
         goal=(float('inf'),0,None,None,self.GOAL,None)
         
          # Define action sets
-#         n = 12
         self.L = 10
         actions = [[k, self.L] for k in range(-2,3)]
         
-        # Create a open list
+        # Create an open list
         open_list = PriorityQueue()
         # Create a close list
         close_list=[]
@@ -306,39 +299,27 @@ class Astar:
         tracker=[]
         current=start
         open_list.put(start)
-#         [Cost,Idx,PrIdx,State,CostToCome]
-#         theta.append([float('inf'),None,None,(i,j,t),float('inf')])
         while open_list and not self.check_goal(current[4]):
-#             print('.',end='')
-#             for node in open_list.queue:
-#                 print(node)
             current=open_list.get()
-#             print("Current",current)
-            
             close_list.append(current[4])
             tracker.append(current)
-#             if current[3] in close_list:
-#                     continue
             if self.check_goal(current[4]):
                     break
-            
             else:
                 for a in actions:
                     neighbor,cost_of_action=self.action_set(current[4],a)
-#                     print(neighbor)
                     if not neighbor==None:
                         
                         if neighbor[4] not in close_list and not neighbor[0]==-1:
                             if  neighbor[0]==float('inf'):
                                 self.frame_info.append([current,neighbor])
-#                                 self.draw_vector(current,neighbor)
-#                                 flip_img = cv2.flip(self.img, 0)
-#                                 cv2.imshow("Out",flip_img)
-#                                 cv2.waitKey(1)
-#                                 if cv2.waitKey(20) & 0xFF == ord('q'):
-#                                     break
-#                                 self.result.write(flip_img)
-#         [Cost,CostToGoal,PrIdx,Idx,State,CostToCome]
+                                self.draw_vector(current,neighbor)
+                                flip_img = cv2.flip(self.img, 0)
+                                cv2.imshow("Out",flip_img)
+                                cv2.waitKey(1)
+                                if cv2.waitKey(20) & 0xFF == ord('q'):
+                                    break
+                                self.result.write(flip_img)
 #                                 Parent
                                 neighbor[2]=current[3]
 #                                 Cost to Come
@@ -348,7 +329,6 @@ class Astar:
                                 neighbor[1]=self.cost_to_goal(neighbor[4][0],neighbor[4][1])
                                 idx=idx+1
                                 neighbor[3]=idx
-#                                 print("Neigbor",neighbor)
                                 open_list.put(tuple(neighbor))
                             else:
                                 if neighbor[0]>current[5]+cost_of_action:
@@ -362,28 +342,28 @@ class Astar:
         print(f"\nExecution time of algorithm: {elapsed_time:.2f} seconds")
         return tracker,current
     
-
 if __name__ == "__main__":
-    # Define start and goal
-    # Inverted co ordinate system compensation
     
-#     goal=(230,500,0)
-#     sx=int(input("Enter X co ordinate of start point: "))
-#     sy=int(input("Enter Y co ordinate of start point: "))
-#     st=int(input("Enter Theta of start point: "))
-#     start=(sy,sx,st)
-#     gx=int(input("Enter X co ordinate of goal point: "))
-#     gy=int(input("Enter Y co ordinate of goal point: "))
-#     gt=int(input("Enter theta of goal point: "))
-#     goal=(gy,gx,gt)
-    start=(125,50,0)
-    goal=(230,430,0)
-#     goal=(30,30,0)
-    # start=(0,0)
-    # Create an instance of Dijkstra
-    robot_clear=5
-    step_size=10
+    # Parameters to accept start and goal
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--InitState",nargs='+', type=int, help = 'Initial state for the matrix')
+    parser.add_argument("--GoalState",nargs='+', type=int, help = 'Goal state for the matrix')
+    parser.add_argument("--StepSize",nargs='+', type=int, help = 'Step size for the robot')
+    parser.add_argument("--RobotClearance",nargs='+', type=int, help = 'Clearance for the robot')
+    Args = parser.parse_args()
+    initial_point = Args.InitState
+    goal_point = Args.GoalState
+    step_size = Args.StepSize
+    robot_clear = Args.RobotClearance
+
+    # Converting inputs from list to tuple and integer 
+    start=(initial_point[1], initial_point[0],0)
+    goal=(goal_point[1], goal_point[0],0)
+    robot_clear = robot_clear[0]
+    step_size = step_size[0]
+
+    #Creating an instance of A*
     d_algo = Astar(600,250,1,start,goal,robot_clear,step_size)
-    
+
     # Call the game method
     d_algo.game()
