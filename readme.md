@@ -32,6 +32,7 @@ Note: The output video is created as Astar01.avi which is converted to mp4 using
 To run the program, open the command prompt/terminal and navigate to the directory where the source code files are located. Then, type the following command: 
 
     python3 astar3.py --InitState 50 125 --GoalState 430 230 --StepSize 10 --RobotClearance 5
+    python3 astar3.py --InitState 50 125 --GoalState 430 230 --StepSize 10 --RobotClearance 5
 
 ## Github Link
 [Repository](https://github.com/shantanuparabumd/ASTAR.git)
