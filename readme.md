@@ -6,9 +6,9 @@
 - Shantanu Parab
 - Vineet Singh
 
-### Student ID
-- sparab@umd.edu
-- vsingh03@umd.edu
+### Directory ID & UID
+- sparab - 119347539
+- vsingh03 - 119123614
 
 ## Libraries used are: 
 >numpy, argparse, timeit, queue, OpenCV, math 
